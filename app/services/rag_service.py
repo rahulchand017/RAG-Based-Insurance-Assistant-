@@ -1,4 +1,4 @@
-from google import genai
+from groq import Groq
 from sqlalchemy.orm import Session
 from app.config.config import settings
 from app.models.policy import Policy
@@ -9,8 +9,7 @@ from app.models.premiums import Premium
 from app.models.terms import Term
 from app.models.risk import RiskAssessment
 
-client = genai.Client(api_key=settings.GEMINI_API_KEY)
-
+client = Groq(api_key=settings.GROQ_API_KEY)
 
 
 def build_policy_context(db: Session, policy_id: int) -> str:
@@ -80,6 +79,9 @@ def ask_policy_question(db: Session, policy_id: int, question: str) -> str:
     Answer in simple language that anyone can understand.
     """
 
-    # blueprint — will activate once gemini api key is added
-    response = client.models.generate_content(model="gemini-2.0-flash-lite", contents=prompt)
-    return response.text.strip()
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.1
+    )
+    return response.choices[0].message.content.strip()

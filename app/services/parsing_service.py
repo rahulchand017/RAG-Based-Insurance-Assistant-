@@ -1,8 +1,8 @@
-from google import genai
+from groq import Groq
 import json
 from app.config.config import settings
 
-client = genai.Client(api_key=settings.GEMINI_API_KEY)
+client = Groq(api_key=settings.GROQ_API_KEY)
 
 
 def parse_policy_with_gemini(extracted_text: str) -> dict:
@@ -58,8 +58,12 @@ def parse_policy_with_gemini(extracted_text: str) -> dict:
     {extracted_text}
     """
 
-    response = client.models.generate_content(model="gemini-2.0-flash-lite", contents=prompt)
-    raw = response.text.strip()
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.1
+    )
+    raw = response.choices[0].message.content.strip()
 
     if raw.startswith("```"):
         raw = raw.split("```")[1]
@@ -95,8 +99,12 @@ def generate_risk_assessment(extracted_text: str, parsed_data: dict) -> dict:
     {parsed_data}
     """
 
-    response = client.models.generate_content(model="gemini-2.0-flash-lite", contents=prompt)
-    raw = response.text.strip()
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.1
+    )
+    raw = response.choices[0].message.content.strip()
 
     if raw.startswith("```"):
         raw = raw.split("```")[1]
