@@ -26,6 +26,7 @@ async def upload_policy(
     file_bytes = await file.read()
 
     extracted_text = extract_text_from_pdf(file_bytes)
+    extracted_text = extracted_text[:6000]
     if not extracted_text:
         raise HTTPException(status_code=400, detail="Could not extract text from PDF")
 

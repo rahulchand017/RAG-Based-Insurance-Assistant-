@@ -58,7 +58,7 @@ def parse_policy_with_gemini(extracted_text: str) -> dict:
     {extracted_text}
     """
 
-    response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+    response = client.models.generate_content(model="gemini-2.0-flash-lite", contents=prompt)
     raw = response.text.strip()
 
     if raw.startswith("```"):
@@ -95,7 +95,7 @@ def generate_risk_assessment(extracted_text: str, parsed_data: dict) -> dict:
     {parsed_data}
     """
 
-    response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+    response = client.models.generate_content(model="gemini-2.0-flash-lite", contents=prompt)
     raw = response.text.strip()
 
     if raw.startswith("```"):

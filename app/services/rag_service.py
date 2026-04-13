@@ -81,5 +81,5 @@ def ask_policy_question(db: Session, policy_id: int, question: str) -> str:
     """
 
     # blueprint — will activate once gemini api key is added
-    response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+    response = client.models.generate_content(model="gemini-2.0-flash-lite", contents=prompt)
     return response.text.strip()
