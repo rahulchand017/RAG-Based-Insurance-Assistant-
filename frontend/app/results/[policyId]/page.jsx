@@ -4,8 +4,13 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getPolicy } from "@/lib/api";
 import PolicyTabs from "@/components/PolicyTabs";
+import { useAuth } from "@/lib/auth";
+
+// inside the component function, first line:
+
 
 export default function ResultsPage() {
+  useAuth();
   const { policyId } = useParams();
   const router = useRouter();
   const [data, setData] = useState(null);

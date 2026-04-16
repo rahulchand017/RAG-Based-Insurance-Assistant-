@@ -41,3 +41,28 @@ export async function chatWithPolicy(policyId, question) {
   if (!res.ok) throw new Error("Failed to get answer");
   return res.json(); // { policy_id, question, answer }
 }
+export async function registerUser(email, username, password) {
+  const res = await fetch(`${BASE_URL}/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, username, password }),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.detail || "Registration failed");
+  }
+  return res.json(); // { access_token, token_type, username }
+}
+
+export async function loginUser(email, password) {
+  const res = await fetch(`${BASE_URL}/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.detail || "Login failed");
+  }
+  return res.json(); // { access_token, token_type, username }
+}

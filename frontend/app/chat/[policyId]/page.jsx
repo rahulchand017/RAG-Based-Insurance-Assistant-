@@ -3,7 +3,9 @@
 import { useParams, useRouter } from "next/navigation";
 import ChatWindow from "@/components/ChatWindow";
 
+
 export default function ChatPage() {
+  useAuth();
   const params = useParams();
   const policyId = params?.policyId;
   const router = useRouter();

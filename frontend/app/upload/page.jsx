@@ -4,8 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import UploadZone from "@/components/UploadZone";
 import { uploadPolicy, analyzePolicy } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
+
 
 export default function UploadPage() {
+  useAuth();
   const router = useRouter();
   const [file, setFile] = useState(null);
   const [policyName, setPolicyName] = useState("");
