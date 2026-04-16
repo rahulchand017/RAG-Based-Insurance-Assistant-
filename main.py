@@ -5,7 +5,10 @@ from app.models import policy, coverage, exclusions, claims, premiums, terms, ri
 from app.routes import upload, analyze, policy as policy_route, chat
 from app.routes import auth_routes as auth
 
-
+import os
+if os.path.exists("insurance.db"):
+    os.remove("insurance.db")
+    
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Insurance Analyzer")
