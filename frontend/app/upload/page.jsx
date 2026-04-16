@@ -27,7 +27,7 @@ export default function UploadPage() {
       const uploaded = await uploadPolicy(file, policyName, policyType);
       await analyzePolicy(uploaded.id);
       router.push(`/results/${uploaded.id}`);
-    } catch (err) {
+    } catch {
       setError("Something went wrong. Make sure the backend is running.");
       setLoading(false);
     }
