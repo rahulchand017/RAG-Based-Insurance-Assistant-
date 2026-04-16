@@ -2,7 +2,8 @@
 
 import { useParams, useRouter } from "next/navigation";
 import ChatWindow from "@/components/ChatWindow";
-
+import Navbar from "@/components/Navbar";
+import { useAuth } from "@/lib/auth";
 
 export default function ChatPage() {
   useAuth();
@@ -11,8 +12,9 @@ export default function ChatPage() {
   const router = useRouter();
 
   return (
-    <main className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-3xl mx-auto">
+    <main className="min-h-screen bg-gray-50">
+      <Navbar />
+      <div className="max-w-3xl mx-auto p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-800">Ask About Your Policy</h1>
@@ -25,7 +27,6 @@ export default function ChatPage() {
             ← Back to Results
           </button>
         </div>
-
         <ChatWindow policyId={policyId} />
       </div>
     </main>

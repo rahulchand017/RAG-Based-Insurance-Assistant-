@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { getPolicy } from "@/lib/api";
 import PolicyTabs from "@/components/PolicyTabs";
 import { useAuth } from "@/lib/auth";
+import Navbar from "@/components/Navbar";
 
 // inside the component function, first line:
 
@@ -35,8 +36,9 @@ export default function ResultsPage() {
   );
 
   return (
-    <main className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto">
+    <main className="min-h-screen bg-gray-50">
+      <Navbar />
+      <div className="max-w-4xl mx-auto p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-800">{data.policy.policy_name}</h1>
