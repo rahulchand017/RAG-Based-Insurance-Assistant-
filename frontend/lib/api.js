@@ -1,6 +1,7 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export async function uploadPolicy(file, policyName, policyType) {
+  const token = localStorage.getItem("token");
   const formData = new FormData();
   formData.append("file", file);
   formData.append("policy_name", policyName);
@@ -8,11 +9,12 @@ export async function uploadPolicy(file, policyName, policyType) {
 
   const res = await fetch(`${BASE_URL}/upload-policy`, {
     method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
     body: formData,
   });
 
   if (!res.ok) throw new Error("Failed to upload policy");
-  return res.json(); // { id, policy_name, policy_type, upload_date, status }
+  return res.json();
 }
 
 export async function analyzePolicy(policyId) {
@@ -39,8 +41,9 @@ export async function chatWithPolicy(policyId, question) {
   });
 
   if (!res.ok) throw new Error("Failed to get answer");
-  return res.json(); // { policy_id, question, answer }
+  return res.json();
 }
+
 export async function registerUser(email, username, password) {
   const res = await fetch(`${BASE_URL}/register`, {
     method: "POST",
@@ -51,7 +54,7 @@ export async function registerUser(email, username, password) {
     const err = await res.json();
     throw new Error(err.detail || "Registration failed");
   }
-  return res.json(); // { access_token, token_type, username }
+  return res.json();
 }
 
 export async function loginUser(email, password) {
@@ -64,5 +67,24 @@ export async function loginUser(email, password) {
     const err = await res.json();
     throw new Error(err.detail || "Login failed");
   }
-  return res.json(); // { access_token, token_type, username }
+  return res.json();
+}
+
+export async function getMyPolicies() {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${BASE_URL}/my-policies`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Failed to fetch policies");
+  return res.json();
+}
+
+export async function deletePolicy(policyId) {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${BASE_URL}/policy/${policyId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Failed to delete policy");
+  return res.json();
 }

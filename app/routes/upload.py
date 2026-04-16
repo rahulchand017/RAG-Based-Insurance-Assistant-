@@ -1,5 +1,6 @@
-from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, Form
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, Form, Header
 from sqlalchemy.orm import Session
+from typing import Optional
 from app.database.database import get_db
 from app.models.policy import Policy
 from app.models.coverage import Coverage
@@ -10,6 +11,7 @@ from app.models.terms import Term
 from app.services.extraction_service import extract_text_from_pdf
 from app.services.parsing_service import parse_policy_with_gemini
 from app.schemas.policy import PolicyResponse
+from app.services.auth_service import decode_token
 
 router = APIRouter()
 
@@ -18,7 +20,8 @@ async def upload_policy(
     file: UploadFile = File(...),
     policy_name: str = Form(...),
     policy_type: str = Form(...),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None)
 ):
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are accepted")
@@ -30,7 +33,15 @@ async def upload_policy(
     if not extracted_text:
         raise HTTPException(status_code=400, detail="Could not extract text from PDF")
 
+    user_id = None
+    if authorization and authorization.startswith("Bearer "):
+        token = authorization.split(" ")[1]
+        payload = decode_token(token)
+        if payload:
+            user_id = int(payload.get("sub"))
+
     policy = Policy(
+        user_id=user_id,
         policy_name=policy_name,
         policy_type=policy_type,
         extracted_text=extracted_text,
@@ -96,3 +107,56 @@ async def upload_policy(
         raise HTTPException(status_code=500, detail=f"Parsing failed: {str(ex)}")
 
     return policy
+
+
+@router.get("/my-policies")
+def get_my_policies(
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None)
+):
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    token = authorization.split(" ")[1]
+    payload = decode_token(token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    user_id = int(payload.get("sub"))
+    policies = db.query(Policy).filter(Policy.user_id == user_id).order_by(Policy.upload_date.desc()).all()
+
+    return [
+        {
+            "id": p.id,
+            "policy_name": p.policy_name,
+            "policy_type": p.policy_type,
+            "upload_date": p.upload_date,
+            "status": p.status
+        }
+        for p in policies
+    ]
+
+
+@router.delete("/policy/{policy_id}")
+def delete_policy(
+    policy_id: int,
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None)
+):
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    token = authorization.split(" ")[1]
+    payload = decode_token(token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    user_id = int(payload.get("sub"))
+    policy = db.query(Policy).filter(Policy.id == policy_id, Policy.user_id == user_id).first()
+
+    if not policy:
+        raise HTTPException(status_code=404, detail="Policy not found")
+
+    db.delete(policy)
+    db.commit()
+    return {"message": "Policy deleted successfully"}

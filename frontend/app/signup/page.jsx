@@ -23,7 +23,7 @@ export default function SignupPage() {
       const res = await registerUser(email, username, password);
       localStorage.setItem("token", res.access_token);
       localStorage.setItem("username", res.username);
-      router.push("/upload");
+      router.push("/dashboard");
     } catch (err) {
       setError(err.message);
       setLoading(false);

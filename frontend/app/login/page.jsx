@@ -22,7 +22,7 @@ export default function LoginPage() {
       const res = await loginUser(email, password);
       localStorage.setItem("token", res.access_token);
       localStorage.setItem("username", res.username);
-      router.push("/upload");
+      router.push("/dashboard");
     } catch (err) {
       setError(err.message);
       setLoading(false);
