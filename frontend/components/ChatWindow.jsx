@@ -29,12 +29,10 @@ export default function ChatWindow({ policyId }) {
 
   async function handleSend() {
     if (!input.trim() || loading) return;
-
     const question = input.trim();
     setInput("");
     setMessages((prev) => [...prev, { role: "user", text: question }]);
     setLoading(true);
-
     try {
       const res = await chatWithPolicy(policyId, question);
       setMessages((prev) => [...prev, { role: "ai", text: res.answer }]);
@@ -53,44 +51,75 @@ export default function ChatWindow({ policyId }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-md flex flex-col h-[70vh]">
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+    <div style={{ background: "#1a1d2e", border: "0.5px solid #2a2d3e", borderRadius: "16px", display: "flex", flexDirection: "column", height: "70vh" }}>
+      <div style={{ flex: 1, overflowY: "auto", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
         {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
-              msg.role === "user"
-                ? "bg-blue-600 text-white rounded-br-sm"
-                : "bg-gray-100 text-gray-800 rounded-bl-sm"
-            }`}>
+          <div key={i} style={{ display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}>
+            <div style={{
+              maxWidth: "80%",
+              padding: "12px 16px",
+              borderRadius: msg.role === "user" ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
+              background: msg.role === "user" ? "#185FA5" : "#0f1117",
+              border: msg.role === "user" ? "none" : "0.5px solid #2a2d3e",
+              color: msg.role === "user" ? "#E6F1FB" : "#B5D4F4",
+              fontSize: "14px",
+              lineHeight: "1.6"
+            }}>
               {msg.text}
             </div>
           </div>
         ))}
 
         {loading && (
-          <div className="flex justify-start">
-            <div className="bg-gray-100 text-gray-500 px-4 py-3 rounded-2xl rounded-bl-sm text-sm">
+          <div style={{ display: "flex", justifyContent: "flex-start" }}>
+            <div style={{
+              padding: "12px 16px",
+              borderRadius: "16px 16px 16px 4px",
+              background: "#0f1117",
+              border: "0.5px solid #2a2d3e",
+              color: "#85B7EB",
+              fontSize: "14px"
+            }}>
               Thinking...
             </div>
           </div>
         )}
-
         <div ref={bottomRef} />
       </div>
 
-      <div className="border-t p-4 flex gap-3">
+      <div style={{ borderTop: "0.5px solid #2a2d3e", padding: "16px", display: "flex", gap: "12px" }}>
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Ask about coverage, exclusions, claims..."
-          className="flex-1 border border-gray-300 rounded-xl px-4 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          style={{
+            flex: 1,
+            background: "#0f1117",
+            border: "0.5px solid #2a2d3e",
+            borderRadius: "10px",
+            padding: "10px 14px",
+            fontSize: "14px",
+            color: "#E6F1FB",
+            outline: "none"
+          }}
         />
         <button
           onClick={handleSend}
           disabled={loading || !input.trim()}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-medium transition disabled:opacity-50"
+          style={{
+            background: loading || !input.trim() ? "#185FA5" : "#378ADD",
+            color: "#E6F1FB",
+            border: "none",
+            borderRadius: "10px",
+            padding: "10px 20px",
+            fontSize: "14px",
+            fontWeight: "500",
+            cursor: loading || !input.trim() ? "not-allowed" : "pointer",
+            opacity: loading || !input.trim() ? 0.6 : 1,
+            transition: "opacity 0.2s"
+          }}
         >
           Send
         </button>

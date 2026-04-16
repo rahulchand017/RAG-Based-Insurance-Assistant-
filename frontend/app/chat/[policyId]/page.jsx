@@ -12,21 +12,32 @@ export default function ChatPage() {
   const router = useRouter();
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main style={{ background: "#0f1117", minHeight: "100vh" }}>
       <Navbar />
-      <div className="max-w-3xl mx-auto p-6">
-        <div className="flex items-center justify-between mb-6">
+      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 24px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">Ask About Your Policy</h1>
-            <p className="text-sm text-gray-500">Policy #{policyId}</p>
+            <h1 style={{ color: "#E6F1FB", fontSize: "22px", fontWeight: "600", marginBottom: "4px" }}>
+              Ask About Your Policy
+            </h1>
+            <p style={{ color: "#85B7EB", fontSize: "13px" }}>Policy #{policyId}</p>
           </div>
           <button
             onClick={() => router.push(`/results/${policyId}`)}
-            className="text-sm text-blue-600 hover:underline"
+            style={{
+              color: "#85B7EB",
+              background: "transparent",
+              border: "0.5px solid #2a2d3e",
+              borderRadius: "10px",
+              padding: "8px 16px",
+              fontSize: "13px",
+              cursor: "pointer"
+            }}
           >
             ← Back to Results
           </button>
         </div>
+
         <ChatWindow policyId={policyId} />
       </div>
     </main>

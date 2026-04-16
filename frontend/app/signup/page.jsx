@@ -30,66 +30,76 @@ export default function SignupPage() {
     }
   }
 
+  const inputStyle = {
+    width: "100%",
+    background: "#0f1117",
+    border: "0.5px solid #2a2d3e",
+    borderRadius: "10px",
+    padding: "11px 14px",
+    fontSize: "14px",
+    color: "#E6F1FB",
+    outline: "none",
+    boxSizing: "border-box"
+  };
+
   return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="bg-white rounded-2xl shadow-md w-full max-w-md p-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-1">Create Account</h1>
-        <p className="text-gray-500 text-sm mb-6">Sign up to start analyzing your policies</p>
+    <main style={{ background: "#0f1117", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
+      <div style={{ width: "100%", maxWidth: "420px" }}>
 
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+        <div style={{ textAlign: "center", marginBottom: "36px" }}>
+          <div style={{ width: "48px", height: "48px", background: "#378ADD", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+            <span style={{ color: "#E6F1FB", fontSize: "16px", fontWeight: "600" }}>PA</span>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-            <input
-              type="text"
-              placeholder="rahul123"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          <h1 style={{ color: "#E6F1FB", fontSize: "22px", fontWeight: "600", marginBottom: "6px" }}>Create Account</h1>
+          <p style={{ color: "#85B7EB", fontSize: "14px" }}>Sign up to start analyzing your policies</p>
         </div>
 
-        {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
+        <div style={{ background: "#1a1d2e", border: "0.5px solid #2a2d3e", borderRadius: "16px", padding: "32px" }}>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={{ color: "#B5D4F4", fontSize: "13px", fontWeight: "500", display: "block", marginBottom: "6px" }}>Email</label>
+            <input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} />
+          </div>
 
-        <button
-          onClick={handleSignup}
-          disabled={loading}
-          className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition disabled:opacity-50"
-        >
-          {loading ? "Creating account..." : "Sign Up"}
-        </button>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={{ color: "#B5D4F4", fontSize: "13px", fontWeight: "500", display: "block", marginBottom: "6px" }}>Username</label>
+            <input type="text" placeholder="rahul123" value={username} onChange={(e) => setUsername(e.target.value)} style={inputStyle} />
+          </div>
 
-        <p className="text-center text-sm text-gray-500 mt-4">
-          Already have an account?{" "}
-          <span
-            onClick={() => router.push("/login")}
-            className="text-blue-600 cursor-pointer hover:underline"
+          <div style={{ marginBottom: "8px" }}>
+            <label style={{ color: "#B5D4F4", fontSize: "13px", fontWeight: "500", display: "block", marginBottom: "6px" }}>Password</label>
+            <input type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} style={inputStyle} />
+          </div>
+
+          {error && <p style={{ color: "#F09595", fontSize: "13px", margin: "10px 0" }}>{error}</p>}
+
+          <button
+            onClick={handleSignup}
+            disabled={loading}
+            style={{
+              marginTop: "20px",
+              width: "100%",
+              background: loading ? "#185FA5" : "#378ADD",
+              color: "#E6F1FB",
+              border: "none",
+              borderRadius: "10px",
+              padding: "12px",
+              fontSize: "15px",
+              fontWeight: "600",
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.7 : 1,
+              transition: "opacity 0.2s"
+            }}
           >
-            Login
-          </span>
-        </p>
+            {loading ? "Creating account..." : "Sign Up"}
+          </button>
+
+          <p style={{ textAlign: "center", color: "#85B7EB", fontSize: "13px", marginTop: "20px" }}>
+            Already have an account?{" "}
+            <span onClick={() => router.push("/login")} style={{ color: "#378ADD", cursor: "pointer" }}>
+              Login
+            </span>
+          </p>
+        </div>
       </div>
     </main>
   );

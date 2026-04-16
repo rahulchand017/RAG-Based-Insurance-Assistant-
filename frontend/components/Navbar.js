@@ -19,23 +19,34 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-white border-b px-6 py-3 flex items-center justify-between">
-      <span
-        onClick={() => router.push("/upload")}
-        className="text-blue-600 font-bold text-lg cursor-pointer hover:opacity-80"
-      >
-        Policy Analyzer
-      </span>
+    <nav style={{ background: "#1a1d2e" }} className="px-8 py-4 flex items-center justify-between relative">
 
-      <div className="flex items-center gap-4">
+      <div className="w-32" />
+
+      <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-3 cursor-pointer" onClick={() => router.push("/upload")}>
+        <div style={{ background: "#378ADD" }} className="w-8 h-8 rounded-lg flex items-center justify-center">
+          <span style={{ color: "#E6F1FB" }} className="text-xs font-medium">PA</span>
+        </div>
+        <span style={{ color: "#E6F1FB", fontSize: "20px" }} className="font-semibold hover:opacity-80 transition">
+          Policy Analyzer
+        </span>
+      </div>
+
+      <div className="flex items-center gap-3">
         {username && (
-          <span className="text-sm text-gray-600">
-            👤 <span className="font-medium">{username}</span>
-          </span>
+          <div style={{ background: "#2a2d3e", border: "0.5px solid #3a3d4e" }} className="flex items-center gap-2 px-3 py-1.5 rounded-full">
+            <div style={{ background: "#185FA5" }} className="w-6 h-6 rounded-full flex items-center justify-center">
+              <span style={{ color: "#B5D4F4" }} className="text-xs font-medium">
+                {username[0].toUpperCase()}
+              </span>
+            </div>
+            <span style={{ color: "#B5D4F4" }} className="text-sm font-medium">{username}</span>
+          </div>
         )}
         <button
           onClick={handleLogout}
-          className="text-sm bg-red-50 text-red-600 hover:bg-red-100 px-4 py-1.5 rounded-lg transition font-medium"
+          style={{ color: "#85B7EB", border: "0.5px solid #3a3d4e", fontSize: "14px" }}
+          className="bg-transparent px-4 py-1.5 rounded-full hover:opacity-70 transition"
         >
           Logout
         </button>

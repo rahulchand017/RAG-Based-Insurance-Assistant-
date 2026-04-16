@@ -34,32 +34,61 @@ export default function UploadPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main style={{ background: "#0f1117", minHeight: "100vh" }}>
       <Navbar />
-      <div className="flex items-center justify-center p-6">
-        <div className="bg-white rounded-2xl shadow-md w-full max-w-lg p-8">
-          <h1 className="text-2xl font-bold text-gray-800 mb-1">Insurance Policy Analyzer</h1>
-          <p className="text-gray-500 text-sm mb-6">Upload your policy PDF to get a detailed breakdown</p>
+      <div className="flex items-center justify-center p-6" style={{ minHeight: "calc(100vh - 64px)" }}>
+        <div style={{ background: "#1a1d2e", border: "0.5px solid #2a2d3e", borderRadius: "16px", width: "100%", maxWidth: "500px", padding: "36px" }}>
+          
+          <h1 style={{ color: "#E6F1FB", fontSize: "22px", fontWeight: "600", marginBottom: "6px" }}>
+            Analyze Your Policy
+          </h1>
+          <p style={{ color: "#85B7EB", fontSize: "14px", marginBottom: "28px" }}>
+            Upload a PDF to get coverage breakdown, risk score and AI chat
+          </p>
 
           <UploadZone file={file} setFile={setFile} />
 
-          <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Policy Name</label>
+          <div style={{ marginTop: "20px" }}>
+            <label style={{ color: "#B5D4F4", fontSize: "13px", fontWeight: "500", display: "block", marginBottom: "6px" }}>
+              Policy Name
+            </label>
             <input
               type="text"
               placeholder="e.g. Max Bupa Health Plan"
               value={policyName}
               onChange={(e) => setPolicyName(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              style={{
+                width: "100%",
+                background: "#0f1117",
+                border: "0.5px solid #2a2d3e",
+                borderRadius: "10px",
+                padding: "10px 14px",
+                fontSize: "14px",
+                color: "#E6F1FB",
+                outline: "none",
+                boxSizing: "border-box"
+              }}
             />
           </div>
 
-          <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Policy Type</label>
+          <div style={{ marginTop: "16px" }}>
+            <label style={{ color: "#B5D4F4", fontSize: "13px", fontWeight: "500", display: "block", marginBottom: "6px" }}>
+              Policy Type
+            </label>
             <select
               value={policyType}
               onChange={(e) => setPolicyType(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              style={{
+                width: "100%",
+                background: "#0f1117",
+                border: "0.5px solid #2a2d3e",
+                borderRadius: "10px",
+                padding: "10px 14px",
+                fontSize: "14px",
+                color: "#E6F1FB",
+                outline: "none",
+                boxSizing: "border-box"
+              }}
             >
               <option value="health">Health</option>
               <option value="life">Life</option>
@@ -69,12 +98,27 @@ export default function UploadPage() {
             </select>
           </div>
 
-          {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
+          {error && (
+            <p style={{ color: "#F09595", fontSize: "13px", marginTop: "12px" }}>{error}</p>
+          )}
 
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition disabled:opacity-50"
+            style={{
+              marginTop: "24px",
+              width: "100%",
+              background: loading ? "#185FA5" : "#378ADD",
+              color: "#E6F1FB",
+              border: "none",
+              borderRadius: "10px",
+              padding: "12px",
+              fontSize: "15px",
+              fontWeight: "600",
+              cursor: loading ? "not-allowed" : "pointer",
+              transition: "opacity 0.2s",
+              opacity: loading ? 0.7 : 1
+            }}
           >
             {loading ? "Uploading & Analyzing..." : "Analyze Policy"}
           </button>

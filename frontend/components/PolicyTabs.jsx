@@ -8,26 +8,31 @@ export default function PolicyTabs({ data }) {
   const [active, setActive] = useState("Coverage");
 
   return (
-    <div className="bg-white rounded-2xl shadow-md">
-      {/* Tab Bar */}
-      <div className="flex border-b overflow-x-auto">
+    <div style={{ background: "#1a1d2e", border: "0.5px solid #2a2d3e", borderRadius: "16px", overflow: "hidden" }}>
+      <div style={{ display: "flex", borderBottom: "0.5px solid #2a2d3e", overflowX: "auto" }}>
         {TABS.map((tab) => (
           <button
             key={tab}
             onClick={() => setActive(tab)}
-            className={`px-5 py-3 text-sm font-medium whitespace-nowrap transition ${
-              active === tab
-                ? "border-b-2 border-blue-600 text-blue-600"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
+            style={{
+              padding: "14px 20px",
+              fontSize: "14px",
+              fontWeight: "500",
+              whiteSpace: "nowrap",
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+              color: active === tab ? "#378ADD" : "#85B7EB",
+              borderBottom: active === tab ? "2px solid #378ADD" : "2px solid transparent",
+              transition: "all 0.2s"
+            }}
           >
             {tab}
           </button>
         ))}
       </div>
 
-      {/* Tab Content */}
-      <div className="p-6">
+      <div style={{ padding: "24px" }}>
         {active === "Coverage" && <CoverageTab sections={data.coverage_sections} />}
         {active === "Exclusions" && <ExclusionsTab exclusions={data.exclusions} />}
         {active === "Premiums" && <PremiumsTab premiums={data.premiums} terms={data.terms} />}
@@ -38,45 +43,60 @@ export default function PolicyTabs({ data }) {
   );
 }
 
+function Card({ children }) {
+  return (
+    <div style={{ background: "#0f1117", border: "0.5px solid #2a2d3e", borderRadius: "12px", padding: "16px", marginBottom: "12px" }}>
+      {children}
+    </div>
+  );
+}
+
+function Badge({ text, color }) {
+  const colors = {
+    red: { bg: "#2a1a1a", color: "#F09595" },
+    yellow: { bg: "#2a2410", color: "#FAC775" },
+    green: { bg: "#1a2a1a", color: "#C0DD97" },
+    blue: { bg: "#1a2233", color: "#85B7EB" },
+    gray: { bg: "#2a2d3e", color: "#B5D4F4" },
+  };
+  const c = colors[color] || colors.gray;
+  return (
+    <span style={{ background: c.bg, color: c.color, fontSize: "11px", fontWeight: "500", padding: "3px 10px", borderRadius: "999px" }}>
+      {text}
+    </span>
+  );
+}
+
 function CoverageTab({ sections }) {
   return (
-    <div className="space-y-4">
+    <div>
       {sections.map((s) => (
-        <div key={s.id} className="border rounded-xl p-4">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="font-semibold text-gray-800">{s.coverage_name}</h3>
+        <Card key={s.id}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+            <span style={{ color: "#E6F1FB", fontWeight: "500", fontSize: "15px" }}>{s.coverage_name}</span>
             {s.coverage_limit > 0 && (
-              <span className="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full">
-                ₹{s.coverage_limit.toLocaleString()}
-              </span>
+              <Badge text={`₹${s.coverage_limit.toLocaleString()}`} color="green" />
             )}
           </div>
-          <p className="text-sm text-gray-500">{s.description}</p>
-        </div>
+          <p style={{ color: "#85B7EB", fontSize: "13px", margin: 0 }}>{s.description}</p>
+        </Card>
       ))}
     </div>
   );
 }
 
 function ExclusionsTab({ exclusions }) {
-  const severityColor = (s) => {
-    if (s === "high") return "bg-red-100 text-red-700";
-    if (s === "medium") return "bg-yellow-100 text-yellow-700";
-    return "bg-gray-100 text-gray-600";
-  };
-
+  const severityColor = (s) => s === "high" ? "red" : s === "medium" ? "yellow" : "gray";
   return (
-    <div className="space-y-4">
+    <div>
       {exclusions.map((e) => (
-        <div key={e.id} className="border rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-1">
-            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${severityColor(e.severity)}`}>
-              {e.severity}
-            </span>
-            <span className="text-xs text-gray-400">{e.applies_to}</span>
+        <Card key={e.id}>
+          <div style={{ display: "flex", gap: "8px", marginBottom: "8px", alignItems: "center" }}>
+            <Badge text={e.severity} color={severityColor(e.severity)} />
+            <span style={{ color: "#85B7EB", fontSize: "12px" }}>{e.applies_to}</span>
           </div>
-          <p className="text-sm text-gray-700">{e.exclusion_description}</p>
-        </div>
+          <p style={{ color: "#B5D4F4", fontSize: "13px", margin: 0 }}>{e.exclusion_description}</p>
+        </Card>
       ))}
     </div>
   );
@@ -84,62 +104,56 @@ function ExclusionsTab({ exclusions }) {
 
 function PremiumsTab({ premiums, terms }) {
   return (
-    <div className="space-y-6">
+    <div>
       {premiums.map((p) => (
-        <div key={p.id} className="border rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600 text-sm">Premium Amount</span>
-            <span className="text-xl font-bold text-blue-600">₹{p.premium_amount.toLocaleString()}</span>
+        <Card key={p.id}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+            <span style={{ color: "#85B7EB", fontSize: "13px" }}>Premium Amount</span>
+            <span style={{ color: "#378ADD", fontSize: "22px", fontWeight: "600" }}>₹{p.premium_amount.toLocaleString()}</span>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600 text-sm">Payment Frequency</span>
-            <span className="text-sm capitalize text-gray-800">{p.payment_frequency}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600 text-sm">Renewal Date</span>
-            <span className="text-sm text-gray-800">{p.renewal_date}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600 text-sm">Additional Charges</span>
-            <span className="text-sm text-gray-800">{p.additional_charges}</span>
-          </div>
-        </div>
+          {[
+            ["Payment Frequency", p.payment_frequency],
+            ["Renewal Date", p.renewal_date],
+            ["Additional Charges", p.additional_charges],
+          ].map(([label, value]) => (
+            <div key={label} style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+              <span style={{ color: "#85B7EB", fontSize: "13px" }}>{label}</span>
+              <span style={{ color: "#B5D4F4", fontSize: "13px", textTransform: "capitalize" }}>{value}</span>
+            </div>
+          ))}
+        </Card>
       ))}
 
-      <h3 className="font-semibold text-gray-700 mt-4">Terms & Conditions</h3>
-      <div className="space-y-3">
-        {terms.map((t) => (
-          <div key={t.id} className="border rounded-xl p-4">
-            <div className="flex gap-2 mb-1">
-              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                t.is_favorable === "favorable" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-              }`}>
-                {t.is_favorable}
-              </span>
-              <span className="text-xs text-gray-400 capitalize">{t.category} · {t.impact_level} impact</span>
-            </div>
-            <p className="text-sm text-gray-700">{t.term_description}</p>
+      <p style={{ color: "#E6F1FB", fontWeight: "500", fontSize: "15px", margin: "20px 0 12px" }}>Terms & Conditions</p>
+      {terms.map((t) => (
+        <Card key={t.id}>
+          <div style={{ display: "flex", gap: "8px", marginBottom: "8px", alignItems: "center" }}>
+            <Badge text={t.is_favorable} color={t.is_favorable === "favorable" ? "green" : "red"} />
+            <span style={{ color: "#85B7EB", fontSize: "12px", textTransform: "capitalize" }}>{t.category} · {t.impact_level} impact</span>
           </div>
-        ))}
-      </div>
+          <p style={{ color: "#B5D4F4", fontSize: "13px", margin: 0 }}>{t.term_description}</p>
+        </Card>
+      ))}
     </div>
   );
 }
 
 function ClaimsTab({ procedures }) {
   return (
-    <div className="space-y-4">
+    <div>
       {procedures.map((p) => (
-        <div key={p.id} className="border rounded-xl p-4">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="w-7 h-7 rounded-full bg-blue-600 text-white text-sm flex items-center justify-center font-bold">
-              {p.step_number}
-            </span>
-            <h3 className="font-semibold text-gray-800">{p.procedure_description}</h3>
+        <Card key={p.id}>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+            <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "#185FA5", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ color: "#E6F1FB", fontSize: "13px", fontWeight: "600" }}>{p.step_number}</span>
+            </div>
+            <div>
+              <p style={{ color: "#E6F1FB", fontWeight: "500", fontSize: "14px", margin: "0 0 6px" }}>{p.procedure_description}</p>
+              <p style={{ color: "#85B7EB", fontSize: "12px", margin: "0 0 4px" }}>📄 {p.required_documents}</p>
+              <p style={{ color: "#85B7EB", fontSize: "12px", margin: 0 }}>⏱ {p.processing_time}</p>
+            </div>
           </div>
-          <p className="text-xs text-gray-500 ml-10">📄 {p.required_documents}</p>
-          <p className="text-xs text-gray-400 ml-10 mt-1">⏱ {p.processing_time}</p>
-        </div>
+        </Card>
       ))}
     </div>
   );
@@ -147,35 +161,29 @@ function ClaimsTab({ procedures }) {
 
 function RiskTab({ risk }) {
   const score = risk.overall_risk_score;
-  const color = score >= 7 ? "text-red-600" : score >= 5 ? "text-yellow-600" : "text-green-600";
-  const bg = score >= 7 ? "bg-red-50" : score >= 5 ? "bg-yellow-50" : "bg-green-50";
+  const color = score >= 7 ? "#F09595" : score >= 5 ? "#FAC775" : "#C0DD97";
+  const bg = score >= 7 ? "#2a1a1a" : score >= 5 ? "#2a2410" : "#1a2a1a";
 
   return (
-    <div className="space-y-4">
-      <div className={`${bg} rounded-xl p-6 text-center`}>
-        <p className="text-sm text-gray-500 mb-1">Overall Risk Score</p>
-        <p className={`text-5xl font-bold ${color}`}>{score}<span className="text-xl text-gray-400">/10</span></p>
+    <div>
+      <div style={{ background: bg, borderRadius: "12px", padding: "24px", textAlign: "center", marginBottom: "16px" }}>
+        <p style={{ color: "#85B7EB", fontSize: "13px", marginBottom: "8px" }}>Overall Risk Score</p>
+        <p style={{ color, fontSize: "52px", fontWeight: "700", margin: 0 }}>
+          {score}<span style={{ fontSize: "20px", color: "#85B7EB" }}>/10</span>
+        </p>
       </div>
 
-      <div className="border rounded-xl p-4">
-        <h3 className="font-semibold text-green-700 mb-2">✅ Favorable Aspects</h3>
-        <p className="text-sm text-gray-600">{risk.favorable_aspects}</p>
-      </div>
-
-      <div className="border rounded-xl p-4">
-        <h3 className="font-semibold text-red-700 mb-2">⚠️ Unfavorable Aspects</h3>
-        <p className="text-sm text-gray-600">{risk.unfavorable_aspects}</p>
-      </div>
-
-      <div className="border rounded-xl p-4">
-        <h3 className="font-semibold text-gray-700 mb-2">🏛 Regulatory Concerns</h3>
-        <p className="text-sm text-gray-600">{risk.regulatory_concerns}</p>
-      </div>
-
-      <div className="border rounded-xl p-4">
-        <h3 className="font-semibold text-gray-700 mb-2">👨‍👩‍👧 Family Impact</h3>
-        <p className="text-sm text-gray-600">{risk.family_impact}</p>
-      </div>
+      {[
+        { label: "✅ Favorable Aspects", text: risk.favorable_aspects, color: "#C0DD97" },
+        { label: "⚠️ Unfavorable Aspects", text: risk.unfavorable_aspects, color: "#F09595" },
+        { label: "🏛 Regulatory Concerns", text: risk.regulatory_concerns, color: "#E6F1FB" },
+        { label: "👨‍👩‍👧 Family Impact", text: risk.family_impact, color: "#E6F1FB" },
+      ].map(({ label, text, color }) => (
+        <Card key={label}>
+          <p style={{ color, fontWeight: "500", fontSize: "14px", marginBottom: "8px" }}>{label}</p>
+          <p style={{ color: "#85B7EB", fontSize: "13px", margin: 0, lineHeight: "1.6" }}>{text}</p>
+        </Card>
+      ))}
     </div>
   );
 }
